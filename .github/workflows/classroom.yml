@@ -1,0 +1,71 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Q1
+      id: q1
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q1
+        setup-command: sudo -H pip3 install pytest torch torchvision tqdm matplotlib
+          pandas
+        command: python -m unittest test.Q1
+        timeout: 10
+        max-score: 12
+    - name: Q2
+      id: q2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q2
+        setup-command: ''
+        command: python -m unittest test.Q2
+        timeout: 10
+        max-score: 12
+    - name: Q3
+      id: q3
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q3
+        setup-command: ''
+        command: python -m unittest test.Q3
+        timeout: 10
+        max-score: 12
+    - name: Q4
+      id: q4
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q4
+        setup-command: ''
+        command: python -m unittest test.Q4
+        timeout: 10
+        max-score: 12
+    - name: Q5
+      id: q5
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Q5
+        setup-command: ''
+        command: python -m unittest test.Q5
+        timeout: 10
+        max-score: 12
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        Q1_RESULTS: "${{steps.q1.outputs.result}}"
+        Q2_RESULTS: "${{steps.q2.outputs.result}}"
+        Q3_RESULTS: "${{steps.q3.outputs.result}}"
+        Q4_RESULTS: "${{steps.q4.outputs.result}}"
+        Q5_RESULTS: "${{steps.q5.outputs.result}}"
+      with:
+        runners: q1,q2,q3,q4,q5
